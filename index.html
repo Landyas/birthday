@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>致最爱的爸爸妈妈</title>
+    <style>
+        /* ============================================================
+           🎨 【配置模块】在此处修改颜色、字体和样式
+           ============================================================ */
+        :root {
+            /* 1. 颜色设置 (推荐使用深色字，浅色底) */
+            --bg-color-1: #fdfbfb;       /* 页面1背景色 (米白) */
+            --bg-color-2: #fff3e0;       /* 页面2背景色 (暖橘) */
+            --bg-color-3: #efebe9;       /* 页面3背景色 (浅褐) */
+            --bg-color-4: #ffebee;       /* 页面4背景色 (淡粉) */
+            
+            --text-primary: #3e2723;     /* 主要文字颜色 (深褐) */
+            --text-highlight: #d84315;   /* 标题高亮颜色 (砖红) */
+            --border-color: #fff;        /* 照片边框颜色 */
+
+            /* 2. 字体设置 */
+            --font-size-title: 28px;     /* 标题字号 (建议大一点) */
+            --font-size-body: 18px;      /* 正文字号 */
+            --line-height: 1.8;          /* 行间距 (越大越好读) */
+            --font-family: "KaiTi", "STKaiti", "Microsoft YaHei", serif; /* 优先使用楷体，更有书卷气 */
+        }
+        /* ============================================================
+           ⚠️ 以下代码非专业人士请勿修改，只改上面的配置即可
+           ============================================================ */
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* 滚动容器 */
+        .scroll-container {
+            width: 100vw; height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* 页面通用样式 */
+        .page {
+            width: 100vw; height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 背景色绑定变量 */
+        .page-1 { background: var(--bg-color-1); }
+        .page-2 { background: var(--bg-color-2); }
+        .page-3 { background: var(--bg-color-3); }
+        .page-4 { background: var(--bg-color-4); }
+
+        /* 照片框 */
+        .photo-frame {
+            width: 80vw;
+            height: 60vh; /* 照片占屏幕高度的60% */
+            border: 8px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 8px; /*稍微圆角，不要太圆，像老照片 */
+            overflow: hidden;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 1.2s ease;
+            background: #eee;
+        }
+        .photo-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        /* 文字框 */
+        .text-box {
+            width: 90%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.4s;
+            z-index: 2;
+        }
+        .text-box h2 {
+            font-size: var(--font-size-title);
+            color: var(--text-highlight);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .text-box p {
+            font-size: var(--font-size-body);
+            line-height: var(--line-height);
+        }
+
+        /* 激活状态 */
+        .page.active .photo-frame { opacity: 1; transform: translateY(0) scale(1); }
+        .page.active .text-box { opacity: 1; transform: translateY(0); }
+
+        /* 提示箭头 */
+        .arrow-up {
+            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 24px;
+            border-top: 3px solid #8d6e63; border-left: 3px solid #8d6e63;
+            transform: rotate(45deg); opacity: 0.6;
+            animation: arrowAnim 2s infinite;
+        }
+        @keyframes arrowAnim {
+            0% { opacity: 0; transform: translateX(-50%) rotate(45deg) translate(0, 0); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(-50%) rotate(45deg) translate(-10px, -10px); }
+        }
+
+        /* 音乐按钮 */
+        .music-btn {
+            position: fixed; top: 20px; right: 20px; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.8); border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100; display: flex; justify-content: center; align-items: center;
+            font-size: 20px; cursor: pointer;
+            animation: rotate 8s linear infinite;
+        }
+        .music-btn.stopped { animation-play-state: paused; opacity: 0.6; }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+
+        /* 开场遮罩 */
+        #start-mask {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(62, 39, 35, 0.95); z-index: 999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column; color: #fff;
+            transition: opacity 1s;
+        }
+        .start-btn {
+            padding: 12px 40px; border: 1px solid #fff; border-radius: 4px;
+            font-size: 18px; margin-top: 30px; cursor: pointer; letter-spacing: 2px;
+            background: transparent; color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-mask">
+        <h2 style="font-weight: normal; letter-spacing: 3px;">✨ 纸短情长</h2>
+        <p style="margin-top:10px; opacity: 0.8; font-size: 14px;">点击开启这份家书</p>
+        <button class="start-btn" onclick="startShow()">打开</button>
+    </div>
+
+    <audio id="bgm" loop>
+        <source src="https://music.163.com/song/media/outer/url?id=186016.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</div>
+
+    <div class="scroll-container" id="scrollContainer">
+        
+        <section class="page page-1 active">
+            <div class="photo-frame">
+                <img src="photo1.jpg" alt="全家福">
+            </div>
+            <div class="text-box">
+                <h2>亲爱的爸爸妈妈</h2>
+                <p>今天是特别的日子<br>想对你们说一声：<br>辛苦了，生日快乐！🎂</p>
+            </div>
+            <div class="arrow-up"></div>
+        </section>
+
+        <section class="page page-2">
+            <div class="photo-frame">
+                <img src="photo2.jpg" alt="童年回忆">
+            </div>
+            <div class="text-box">
+                <h2>谢谢你们的养育</h2>
+                <p>小时候，你们是大树，为我遮风挡雨<br>长大了，才懂得那份爱有多深沉<br>感谢你们让我无忧无虑地长大</p>
+            </div>
+            <div class="arrow-up"></div>
+        </section>
+
+        <section class="page page-3">
+            <div class="photo-frame">
+                <img src="photo3.jpg" alt="父母近照">
+            </div>
+            <div class="text-box">
+                <h2>陪伴是最长情的告白</h2>
+                <p>平时工作忙，陪你们的时间太少<br>以后的日子里<br>我会常回家看看，多陪你们聊聊天</p>
+            </div>
+            <div class="arrow-up"></div>
+        </section>
+
+        <section class="page page-4">
+            <div class="photo-frame">
+                <img src="photo4.jpg" alt="开心时刻">
+            </div>
+            <div class="text-box">
+                <h2>愿岁月温柔以待</h2>
+                <p>不求大富大贵，只求你们<br>身体健康，平安喜乐<br>你们健康，就是我最大的福气❤️</p>
+            </div>
+            </section>
+
+    </div>
+
+    <script>
+        const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('musicBtn');
+        const startMask = document.getElementById('start-mask');
+        const container = document.getElementById('scrollContainer');
+        const pages = document.querySelectorAll('.page');
+
+        function startShow() {
+            bgm.play().catch(e => console.log("播放受限"));
+            startMask.style.opacity = '0';
+            setTimeout(() => { startMask.style.display = 'none'; }, 1000);
+        }
+
+        function toggleMusic() {
+            if (bgm.paused) { bgm.play(); musicBtn.classList.remove('stopped'); }
+            else { bgm.pause(); musicBtn.classList.add('stopped'); }
+        }
+
+        container.addEventListener('scroll', () => {
+            const viewportHeight = window.innerHeight;
+            pages.forEach(page => {
+                const rect = page.getBoundingClientRect();
+                if (rect.top >= -viewportHeight/2 && rect.top <= viewportHeight/2) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+        });
+
+        document.addEventListener("WeixinJSBridgeReady", function () { bgm.load(); }, false);
+    </script>
+</body>
+</html>
