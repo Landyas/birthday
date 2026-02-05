@@ -6,29 +6,35 @@
     <title>致最爱的爸爸妈妈</title>
     <style>
         /* ============================================================
-           🎨 【配置模块】在此处修改颜色、字体和样式
+           🎨 【配置模块】
            ============================================================ */
         :root {
-            /* 1. 颜色设置 (推荐使用深色字，浅色底) */
-            --bg-color-1: #fdfbfb;       /* 页面1背景色 (米白) */
-            --bg-color-2: #fff3e0;       /* 页面2背景色 (暖橘) */
-            --bg-color-3: #efebe9;       /* 页面3背景色 (浅褐) */
-            --bg-color-4: #ffebee;       /* 页面4背景色 (淡粉) */
+            /* 1. 颜色设置 */
+            --bg-color-1: #fdfbfb;       /* 页面1背景 */
+            --bg-color-2: #fff3e0;       /* 页面2背景 */
+            --bg-color-3: #efebe9;       /* 页面3背景 */
+            --bg-color-4: #ffebee;       /* 页面4背景 */
+            --bg-color-5: #e3f2fd;       /* 页面5背景 */
+            --bg-color-6: #f3e5f5;       /* 页面6背景 */
             
-            --text-primary: #3e2723;     /* 主要文字颜色 (深褐) */
-            --text-highlight: #d84315;   /* 标题高亮颜色 (砖红) */
-            --border-color: #fff;        /* 照片边框颜色 */
+            --text-primary: #3e2723;     /* 文字颜色 */
+            --text-highlight: #d84315;   /* 标题颜色 */
+            --border-color: #fff;        /* 相框颜色 */
 
             /* 2. 字体设置 */
-            --font-size-title: 28px;     /* 标题字号 (建议大一点) */
-            --font-size-body: 18px;      /* 正文字号 */
-            --line-height: 1.8;          /* 行间距 (越大越好读) */
-            --font-family: "KaiTi", "STKaiti", "Microsoft YaHei", serif; /* 优先使用楷体，更有书卷气 */
-        }
-        /* ============================================================
-           ⚠️ 以下代码非专业人士请勿修改，只改上面的配置即可
-           ============================================================ */
+            --font-size-title: 28px;
+            --font-size-body: 18px;
+            --line-height: 1.8;
+            --font-family: "KaiTi", "STKaiti", "Microsoft YaHei", serif; 
 
+            /* 3. 图片大小控制 (已优化：防止遮挡文字) */
+            --photo-max-width: 85vw;
+            --photo-max-height: 50vh; 
+        }
+
+        /* ============================================================
+           ⚠️ 布局样式
+           ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: var(--font-family);
@@ -56,30 +62,44 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            /* 关键：底部留白，防止箭头遮字 */
+            padding-bottom: 80px; 
         }
 
-        /* 背景色绑定变量 */
+        /* 背景色 */
         .page-1 { background: var(--bg-color-1); }
         .page-2 { background: var(--bg-color-2); }
         .page-3 { background: var(--bg-color-3); }
         .page-4 { background: var(--bg-color-4); }
+        .page-5 { background: var(--bg-color-5); }
+        .page-6 { background: var(--bg-color-6); }
 
-        /* 照片框 */
+        /* 照片框 (自适应) */
         .photo-frame {
-            width: 80vw;
-            height: 60vh; /* 照片占屏幕高度的60% */
+            width: auto;
+            height: auto;
+            max-width: var(--photo-max-width);
+            max-height: var(--photo-max-height);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border: 8px solid var(--border-color);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border-radius: 8px; /*稍微圆角，不要太圆，像老照片 */
-            overflow: hidden;
-            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            margin-bottom: 20px;
             opacity: 0;
             transform: translateY(30px) scale(0.95);
             transition: all 1.2s ease;
-            background: #eee;
+            background: #fff;
         }
         .photo-frame img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: var(--photo-max-height);
+            display: block;
+            object-fit: contain; 
+            border-radius: 4px;
         }
 
         /* 文字框 */
@@ -113,6 +133,7 @@
             border-top: 3px solid #8d6e63; border-left: 3px solid #8d6e63;
             transform: rotate(45deg); opacity: 0.6;
             animation: arrowAnim 2s infinite;
+            z-index: 10;
         }
         @keyframes arrowAnim {
             0% { opacity: 0; transform: translateX(-50%) rotate(45deg) translate(0, 0); }
@@ -150,7 +171,7 @@
 
     <div id="start-mask">
         <h2 style="font-weight: normal; letter-spacing: 3px;">✨ 纸短情长</h2>
-        <p style="margin-top:10px; opacity: 0.8; font-size: 14px;">点击开启这份家书</p>
+        <p style="margin-top:10px; opacity: 0.8; font-size: 14px;">点击开启生日祝福</p>
         <button class="start-btn" onclick="startShow()">打开</button>
     </div>
 
@@ -178,29 +199,47 @@
             </div>
             <div class="text-box">
                 <h2>谢谢你们的养育</h2>
-                <p>小时候，你们是大树，为我遮风挡雨<br>长大了，才懂得那份爱有多深沉<br>感谢你们让我无忧无虑地长大</p>
             </div>
             <div class="arrow-up"></div>
         </section>
 
         <section class="page page-3">
             <div class="photo-frame">
-                <img src="photo3.jpg" alt="父母近照">
+                <img src="photo3.jpg" alt="童年">
             </div>
             <div class="text-box">
                 <h2>陪伴是最长情的告白</h2>
-                <p>平时工作忙，陪你们的时间太少<br>以后的日子里<br>我会常回家看看，多陪你们聊聊天</p>
             </div>
             <div class="arrow-up"></div>
         </section>
 
         <section class="page page-4">
             <div class="photo-frame">
-                <img src="photo4.jpg" alt="开心时刻">
+                <img src="photo4.jpg" alt="旅游">
             </div>
             <div class="text-box">
-                <h2>愿岁月温柔以待</h2>
-                <p>不求大富大贵，只求你们<br>身体健康，平安喜乐<br>你们健康，就是我最大的福气❤️</p>
+                <h2>成年后第一次旅行</h2>
+            </div>
+            <div class="arrow-up"></div>
+        </section>
+
+        <section class="page page-5">
+            <div class="photo-frame">
+                <img src="photo5.jpg" alt="快乐时光">
+            </div>
+            <div class="text-box">
+                <h2>成年后第一次旅行</h2>
+            </div>
+            <div class="arrow-up"></div>
+        </section>
+
+        <section class="page page-6">
+            <div class="photo-frame">
+                <img src="photo6.jpg" alt="祝福">
+            </div>
+            <div class="text-box">
+                <h2>祝爸爸妈妈</h2>
+                <p>身体健康，万事如意<br>平平安安，福寿安康</p>
             </div>
             </section>
 
